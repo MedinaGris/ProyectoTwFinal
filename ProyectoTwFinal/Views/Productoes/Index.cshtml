@@ -4,6 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
+
 <h1>Productos</h1>
 
 <p>
@@ -13,11 +14,12 @@
 <div class="row">
     @foreach (var item in Model)
     {
+        
       <div class="col-4">
         <div class="card" style="width: 18rem;">
-                <img src="~/Images/descarga.jpg"class="card-img-top" alt="Card image">
-                
-                
+
+                <img src=@(String.Format("{0}{1}{2}", "/Images/",@item.Nombre.Replace(' ','_'),".jpg")) class="card-img-top" alt="Card image">
+
             <div class="card-body">
                 <h5 class="card-title">@item.Nombre</h5>
                <h5 class="card-text">@item.Codigo</h5>
