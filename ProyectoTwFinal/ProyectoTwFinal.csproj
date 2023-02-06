@@ -16,12 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Images\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\Images\descarga.jpg" />
-    <None Include="wwwroot\Images\moto1.jpg" />
+    <Folder Include="wwwroot\img\cliente\" />
   </ItemGroup>
 
 </Project>
