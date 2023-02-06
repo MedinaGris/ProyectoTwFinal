@@ -56,15 +56,35 @@ namespace ProyectoTwFinal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Codigo,Descripcion,Cantidad")] Producto producto)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Codigo,Descripcion,Cantidad,File")] Producto producto, IFormFile File)
         {
-            if (ModelState.IsValid)
+
+            if (producto != null && File != null)
             {
+                if (File != null)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\producto");
+                    //si es la primera imagen, crea la capeta img/provedor/
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+
+                    string fileName = producto.Nombre + Path.GetFileName(File.FileName);
+                    string fileNameWithPath = Path.Combine(path, fileName);
+                    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        //copia la imagen a su nueva direccion en wwwrot/img
+                        File.CopyTo(stream);
+                        //copia solo el nombre del archivo
+                        producto.Avatar = fileName;
+                    }
+                }
                 _context.Add(producto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(producto);
+
+           
         }
 
         // GET: Productoes/Edit/5
@@ -88,17 +108,37 @@ namespace ProyectoTwFinal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Codigo,Descripcion,Cantidad")] Producto producto)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Codigo,Descripcion,Cantidad,Avatar")] Producto producto, IFormFile? FileImg)
         {
             if (id != producto.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            // SI SE AGREGÓ NUEVA IMAGEN, SE BORRA LA ANTERIOR Y SE GUARDA LA NUEVA
+            if (FileImg != null)
+            {
+                //direccion donde se guardará la imagen
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\producto");
+                //direccion de la imagen a eliminar
+                string oldpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\producto", producto.Avatar);
+                //se borra la imagen anterior
+                if (System.IO.File.Exists(oldpath))
+                    System.IO.File.Delete(oldpath);
+                //crea la direccion de la imagen tomando en cuenta el nombre del usuario para no chocar nombre
+                string fileName = producto.Nombre + Path.GetFileName(FileImg.FileName);
+                string fileNameWithPath = Path.Combine(path, fileName);
+                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    //copia la imagen del imput hacia la nueva direccion
+                    FileImg.CopyTo(stream);
+                    producto.Avatar = fileName;
+                }
+            }
+            if (producto != null)//Valida que el modleo no se encunetra vacio, las otras validaciones se hacen antes de entrar al metodo
             {
                 try
                 {
+                    //actualiza la informacion de proveedor
                     _context.Update(producto);
                     await _context.SaveChangesAsync();
                 }
@@ -113,8 +153,11 @@ namespace ProyectoTwFinal.Controllers
                         throw;
                     }
                 }
+                //si todo sale bien regresa a la lista de provedores
                 return RedirectToAction(nameof(Index));
             }
+
+           
             return View(producto);
         }
 
