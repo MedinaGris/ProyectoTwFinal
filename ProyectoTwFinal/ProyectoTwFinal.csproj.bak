@@ -15,13 +15,4 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\Images\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\Images\descarga.jpg" />
-    <None Include="wwwroot\Images\moto1.jpg" />
-  </ItemGroup>
-
 </Project>
