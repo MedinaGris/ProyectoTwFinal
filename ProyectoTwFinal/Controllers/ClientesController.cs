@@ -55,7 +55,7 @@ namespace ProyectoTwFinal.Controllers
         public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Correo,Edad, File")] Cliente cliente, IFormFile File)
         {
            
-            return View(cliente);
+           
             if (cliente != null && File != null)
             {
                 if (File != null)
