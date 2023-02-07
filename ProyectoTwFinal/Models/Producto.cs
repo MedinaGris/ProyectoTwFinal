@@ -26,4 +26,5 @@ public partial class Producto
 
     [NotMapped]
     public IFormFile File { get; set; } = null!;
+
 }

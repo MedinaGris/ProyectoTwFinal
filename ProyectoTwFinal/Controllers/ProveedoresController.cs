@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿/*
+  Autor: Rosas Jiménez Rosalinda
+  Fecha creación:03/02/2023
+  Fecha actualización 06/02/2023
+  Descripción: Controllers de proveedores
+*/
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoTwFinal.Models;
 
@@ -56,10 +57,27 @@ namespace ProyectoTwFinal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Correo,Edad")] Proveedore proveedore)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Correo,Edad,File")] Proveedore proveedore,IFormFile File)
         {
-            if (ModelState.IsValid)
+            if (proveedore!=null && File!=null)
             {
+                if (File != null)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\proveedor");
+                    //Si es la primera imagen, crea la capeta img/provedor/
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+
+                    string fileName = proveedore.Nombre+Path.GetFileName(File.FileName);
+                    string fileNameWithPath = Path.Combine(path, fileName);
+                    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        //Copia la imagen a su nueva dirección en wwwrot/img
+                        File.CopyTo(stream);
+                        //Copia solo el nombre del archivo
+                        proveedore.Avatar = fileName;
+                    }
+                }
                 _context.Add(proveedore);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -88,17 +106,37 @@ namespace ProyectoTwFinal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Direccion,Correo,Edad")] Proveedore proveedore)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Avatar,Nombre,Direccion,Correo,Edad")] Proveedore proveedore,IFormFile? FileImg)
         {
             if (id != proveedore.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            // SI SE AGREGÓ NUEVA IMAGEN, SE BORRA LA ANTERIOR Y SE GUARDA LA NUEVA
+            if (FileImg != null)
+            {
+                //Dirección donde se guardará la imagen
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\proveedor");
+                //Dirección de la imagen a eliminar
+                string oldpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\proveedor", proveedore.Avatar);
+                //Se borra la imagen anterior
+                if (System.IO.File.Exists(oldpath))
+                    System.IO.File.Delete(oldpath);
+                //Crea la dirección de la imagen tomando en cuenta el nombre del usuario para no chocar nombre
+                string fileName = proveedore.Nombre + Path.GetFileName(FileImg.FileName);
+                string fileNameWithPath = Path.Combine(path, fileName);
+                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    //Copia la imagen del imput hacia la nueva dirección
+                    FileImg.CopyTo(stream);
+                    proveedore.Avatar = fileName;
+                }
+            }
+            if (proveedore !=null)//Valida que el modelo no se encunetra vacío, las otras validaciones se hacen antes de entrar al método
             {
                 try
                 {
+                    //Actualiza la información de proveedor
                     _context.Update(proveedore);
                     await _context.SaveChangesAsync();
                 }
@@ -113,8 +151,10 @@ namespace ProyectoTwFinal.Controllers
                         throw;
                     }
                 }
+                //Si todo sale bien regresa a la lista de provedores
                 return RedirectToAction(nameof(Index));
             }
+            
             return View(proveedore);
         }
 
