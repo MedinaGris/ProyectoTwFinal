@@ -55,7 +55,7 @@ namespace ProyectoTwFinal.Controllers
         public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Correo,Edad, File")] Cliente cliente, IFormFile File)
         {
            
-            return View(cliente);*/
+            return View(cliente);
             if (cliente != null && File != null)
             {
                 if (File != null)
@@ -154,8 +154,29 @@ namespace ProyectoTwFinal.Controllers
             }
             return View(cliente);
 
-
         }
+
+
+        // GET: Proveedores/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Clientes == null)
+            {
+                return NotFound();
+            }
+
+            var cliente = await _context.Clientes
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+
+            return View(cliente);
+        }
+
+
+
 
         // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -175,6 +196,8 @@ namespace ProyectoTwFinal.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool ClienteExists(int id)
         {
