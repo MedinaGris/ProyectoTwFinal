@@ -1,9 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+/*
+  Autores:Vicente Leonel Vásquez Hernández
+  fecha creación:04/02/2023
+  fecha actualización: 06/02/2023
+  Descripción: Model de productos
+*/
 
 namespace ProyectoTwFinal.Models;
 
+/* Declaración de los get y set de los datos*/
 public partial class Producto
 {
     public int Id { get; set; }

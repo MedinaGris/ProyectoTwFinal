@@ -3,11 +3,17 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Lista de Proveedores</h1>
+@*
+  Autores:Vicente Leonel Vásquez Hernández
+  fecha creación:04/02/2023
+  fecha actualización: 06/02/2023
+  Descripción: Este archivo se encarga de mostrar
+  la lista de productos
+*@
+<h1>Lista de Productos</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success">Crear Producto</a>
+   <a asp-action="Create" class="btn btn-success">Crear Producto</a>
 </p>
 <div class="row">
     @foreach (var item in Model)
@@ -16,21 +22,18 @@
             <div class="card text-center" style="max-width:334px">
                  <div class="card-header">
                     <h5 class="card-title">@item.Nombre</h5>
-                </div>
-                    
+                </div>    
                 <div class="card-body">
                     <img src="~/img/producto/@item.Avatar" class="card-img-top" alt="Card image" style="max-width:270px">
                     <h5 class="card-title">@item.Codigo</h5>
                    <h5 class="card-text">@item.Descripcion</h5>
                 </div>
-               <div class="card-footer text-muted">
+                <div class="card-footer text-muted">
                    <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Ver</a>
                     <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id">Editar</a>
                     <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Eliminar</a>
                 </div>
             </div>
-
-
-            </div>
+        </div>
     }
 </div>

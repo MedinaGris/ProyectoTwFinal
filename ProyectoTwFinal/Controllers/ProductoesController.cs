@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoTwFinal.Models;
+
+/*
+  Autores:Vicente Leonel Vásquez Hernández
+  fecha creación:04/02/2023
+  fecha actualización: 06/02/2023
+  Descripción: Controller de productos
+*/
 
 namespace ProyectoTwFinal.Controllers
 {
@@ -18,16 +20,16 @@ namespace ProyectoTwFinal.Controllers
             _context = context;
         }
 
-        // GET: Productoes
+        // Método qué genera el index
         public async Task<IActionResult> Index()
         {
             return _context.Productos != null ?
                           View(await _context.Productos.ToListAsync()) :
                           Problem("Entity set 'PruebaContext.Productos'  is null.");
-         //   return View(await _context.Productos.ToListAsync());
+        
         }
 
-        // GET: Productoes/Details/5
+        // Método qué genera el apartado detalles
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Productos == null)
@@ -45,15 +47,14 @@ namespace ProyectoTwFinal.Controllers
             return View(producto);
         }
 
-        // GET: Productoes/Create
+        // Método qué genera el create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Productoes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Método qué se encarga del create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Codigo,Descripcion,Cantidad,File")] Producto producto, IFormFile File)
@@ -64,7 +65,7 @@ namespace ProyectoTwFinal.Controllers
                 if (File != null)
                 {
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\producto");
-                    //si es la primera imagen, crea la capeta img/provedor/
+                    //si es la primera imagen, crea la capeta img/producto/
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
 
@@ -87,7 +88,7 @@ namespace ProyectoTwFinal.Controllers
            
         }
 
-        // GET: Productoes/Edit/5
+        // Método qué genera el apartado Edit
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Productos == null)
@@ -103,9 +104,8 @@ namespace ProyectoTwFinal.Controllers
             return View(producto);
         }
 
-        // POST: Productoes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Método qué se encarga del Edit
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Codigo,Descripcion,Cantidad,Avatar")] Producto producto, IFormFile? FileImg)
@@ -161,7 +161,7 @@ namespace ProyectoTwFinal.Controllers
             return View(producto);
         }
 
-        // GET: Productoes/Delete/5
+        // Método qué genera el apartado Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Productos == null)
@@ -179,7 +179,7 @@ namespace ProyectoTwFinal.Controllers
             return View(producto);
         }
 
-        // POST: Productoes/Delete/5
+        // Método qué se encarga del delate
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -197,7 +197,7 @@ namespace ProyectoTwFinal.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        // Método qué verifica la existencia del proyecto
         private bool ProductoExists(int id)
         {
           return _context.Productos.Any(e => e.Id == id);
