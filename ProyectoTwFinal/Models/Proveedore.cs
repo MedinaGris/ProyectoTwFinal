@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+  Autor: Rosas Jiménez Rosalinda
+  Fecha creación:03/02/2023
+  Fecha actualización 06/02/2023
+  Descripción: Models de proveedores
+*/
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,7 +25,5 @@ public partial class Proveedore
     public int Edad { get; set; }
 
     [NotMapped]
-    
-    public IFormFile File { get; set; } = null!;
-    
+    public IFormFile File { get; set; } = null!; 
 }
