@@ -1,4 +1,10 @@
-﻿
+﻿/*
+  Autora:Medina Avendaño Griselda
+  fecha creación:04 / 02 / 2023
+  fecha actualización: 06 / 02 / 2023
+  Descripción: Comtroller de clientes: create, edit, delete
+*/
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoTwFinal.Models;
@@ -61,7 +67,7 @@ namespace ProyectoTwFinal.Controllers
                 if (File != null)
                 {
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\cliente");
-                    //si es la primera imagen, crea la capeta img/provedor/
+                    //si es la primera imagen, crea la capeta img/cliente/
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
 
@@ -134,7 +140,7 @@ namespace ProyectoTwFinal.Controllers
             {
                 try
                 {
-                    //actualiza la informacion de proveedor
+                    //actualiza la informacion de cliente
                     _context.Update(cliente);
                     await _context.SaveChangesAsync();
                 }
@@ -149,7 +155,7 @@ namespace ProyectoTwFinal.Controllers
                         throw;
                     }
                 }
-                //si todo sale bien regresa a la lista de provedores
+                //si todo sale bien regresa a la lista de cliente
                 return RedirectToAction(nameof(Index));
             }
             return View(cliente);

@@ -1,5 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+
+/*
+  Autor: Medina Avendaño Griselda
+  Fecha creación:03/02/2023
+  Fecha actualización 07/02/2023
+  Descripción: Models de proveedores
+*/
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoTwFinal.Models;
