@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProyectoTwFinal.Models;
 
@@ -56,10 +52,29 @@ namespace ProyectoTwFinal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Correo,Edad")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Correo,Edad, File")] Cliente cliente, IFormFile File)
         {
-            if (ModelState.IsValid)
+           
+           
+            if (cliente != null && File != null)
             {
+                if (File != null)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\cliente");
+                    //si es la primera imagen, crea la capeta img/provedor/
+                    if (!Directory.Exists(path))
+                        Directory.CreateDirectory(path);
+
+                    string fileName = cliente.Nombre + Path.GetFileName(File.FileName);
+                    string fileNameWithPath = Path.Combine(path, fileName);
+                    using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        //copia la imagen a su nueva direccion en wwwrot/img
+                        File.CopyTo(stream);
+                        //copia solo el nombre del archivo
+                        cliente.Path = fileName;
+                    }
+                }
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -88,17 +103,38 @@ namespace ProyectoTwFinal.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Direccion,Correo,Edad")] Cliente cliente)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Path,Nombre,Direccion,Correo,Edad")] Cliente cliente, IFormFile? FileImg)
         {
             if (id != cliente.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            
+            // SI SE AGREGÓ NUEVA IMAGEN, SE BORRA LA ANTERIOR Y SE GUARDA LA NUEVA
+            if (FileImg != null)
+            {
+                //direccion donde se guardará la imagen
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\cliente");
+                //direccion de la imagen a eliminar
+                string oldpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\cliente", cliente.Path);
+                //se borra la imagen anterior
+                if (System.IO.File.Exists(oldpath))
+                    System.IO.File.Delete(oldpath);
+                //crea la direccion de la imagen tomando en cuenta el nombre del usuario para no chocar nombre
+                string fileName = cliente.Nombre + Path.GetFileName(FileImg.FileName);
+                string fileNameWithPath = Path.Combine(path, fileName);
+                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                {
+                    //copia la imagen del imput hacia la nueva direccion
+                    FileImg.CopyTo(stream);
+                    cliente.Path = fileName;
+                }
+            }
+            if (cliente != null)//Valida que el modleo no se encunetra vacio, las otras validaciones se hacen antes de entrar al metodo
             {
                 try
                 {
+                    //actualiza la informacion de proveedor
                     _context.Update(cliente);
                     await _context.SaveChangesAsync();
                 }
@@ -113,12 +149,15 @@ namespace ProyectoTwFinal.Controllers
                         throw;
                     }
                 }
+                //si todo sale bien regresa a la lista de provedores
                 return RedirectToAction(nameof(Index));
             }
             return View(cliente);
+
         }
 
-        // GET: Clientes/Delete/5
+
+        // GET: Proveedores/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Clientes == null)
@@ -135,6 +174,9 @@ namespace ProyectoTwFinal.Controllers
 
             return View(cliente);
         }
+
+
+
 
         // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -154,6 +196,8 @@ namespace ProyectoTwFinal.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool ClienteExists(int id)
         {
