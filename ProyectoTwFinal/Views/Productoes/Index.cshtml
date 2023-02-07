@@ -3,34 +3,37 @@
 @{
     ViewData["Title"] = "Index";
 }
-
-
-<h1>Productos</h1>
+@*
+  Autores:Vicente Leonel Vásquez Hernández
+  fecha creación:04/02/2023
+  fecha actualización: 06/02/2023
+  Descripción: Este archivo se encarga de mostrar
+  la lista de productos
+*@
+<h1>Lista de Productos</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Crear Producto</a>
+   <a asp-action="Create" class="btn btn-success">Crear Producto</a>
 </p>
-
 <div class="row">
     @foreach (var item in Model)
     {
-        
-      <div class="col-4">
-        <div class="card" style="width: 18rem;">
-
-                <img src=@(String.Format("{0}{1}{2}", "/Images/",@item.Nombre.Replace(' ','_'),".jpg")) class="card-img-top" alt="Card image">
-
-            <div class="card-body">
-                <h5 class="card-title">@item.Nombre</h5>
-               <h5 class="card-text">@item.Codigo</h5>
-               <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id">Edit</a> |
-               <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Details</a> |
-               <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+        <div class=" col-xl-3 col-lg-4 col-md-6 d-flex justify-content-center">
+            <div class="card text-center" style="max-width:334px">
+                 <div class="card-header">
+                    <h5 class="card-title">@item.Nombre</h5>
+                </div>    
+                <div class="card-body">
+                    <img src="~/img/producto/@item.Avatar" class="card-img-top" alt="Card image" style="max-width:270px">
+                    <h5 class="card-title">@item.Codigo</h5>
+                   <h5 class="card-text">@item.Descripcion</h5>
+                </div>
+                <div class="card-footer text-muted">
+                   <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Ver</a>
+                    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id">Editar</a>
+                    <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Eliminar</a>
+                </div>
             </div>
-        </div>
-
-
         </div>
     }
 </div>
-
