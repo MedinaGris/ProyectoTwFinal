@@ -1,4 +1,10 @@
-﻿@model ProyectoTwFinal.Models.Proveedore
+﻿<!--
+  Autor: Rosas Jiménez Rosalinda
+  Fecha creación:04/02/2023
+  Fecha actualización 06/02/2023
+  Descripción:Detalles proveedor
+-->
+@model ProyectoTwFinal.Models.Proveedore
 
 @{
     ViewData["Title"] = "Details";
@@ -39,7 +45,7 @@
             <div>
                 <a asp-action="Edit" class="btn btn-warning" asp-route-id="@Model?.Id">Editar</a> &nbsp;
                 <a asp-action="Delete" class="btn btn-danger" asp-route-id="@Model?.Id">Eliminar</a>&nbsp;
-                <a asp-action="Index" class="btn btn-primary">  Regresar a la lista</a>
+                <a asp-action="Index" class="btn btn-primary">Regresar a la lista</a>
             </div>
         </div>
     </div>
