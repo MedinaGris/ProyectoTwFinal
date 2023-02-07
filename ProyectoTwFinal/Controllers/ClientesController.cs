@@ -54,18 +54,13 @@ namespace ProyectoTwFinal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Direccion,Correo,Edad, File")] Cliente cliente, IFormFile File)
         {
-            /*if (ModelState.IsValid)
-            {
-                _context.Add(cliente);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+           
             return View(cliente);*/
             if (cliente != null && File != null)
             {
                 if (File != null)
                 {
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\proveedor");
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\img\\cliente");
                     //si es la primera imagen, crea la capeta img/provedor/
                     if (!Directory.Exists(path))
                         Directory.CreateDirectory(path);
@@ -114,47 +109,7 @@ namespace ProyectoTwFinal.Controllers
             {
                 return NotFound();
             }
-            /*
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(cliente);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClienteExists(cliente.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(cliente);
-        }
-
-        // GET: Clientes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Clientes == null)
-            {
-                return NotFound();
-            }
-
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-
-            return View(cliente);*/
+            
             // SI SE AGREGÓ NUEVA IMAGEN, SE BORRA LA ANTERIOR Y SE GUARDA LA NUEVA
             if (FileImg != null)
             {
